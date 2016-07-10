@@ -3,15 +3,41 @@ class HumanPlayer < Player
     super
     @view = PlayerView.new
     @purse = options[:purse] ? options[:purse] : 100
+    @bet = 0
   end
 
-  def bust?
-    @hand.bust?
+  def hit?
+    result = @view.ask_for_hit
+    result == 'y' ? true : false
+  end
+
+  def handle_blackjack_bet
+    @purse += (@bet * (1.5)).round(0) + @bet
+    @bet = 0
+  end
+
+  def handle_winning_bet
+    @purse += (@bet * 2)
+    @bet = 0
+  end
+
+  def regain_bet
+    @purse += @bet
+    @bet = 0
+  end
+
+  def lose_bet
+    @bet = 0
+  end
+
+  def blackjack?
+    @hand.blackjack?
   end
 
   def make_bet
-    until @bet < @purse
-      @bet = @view.ask_for_bet_amount
+    @bet = nil
+    until !@bet.nil? && @bet < @purse
+      @bet = @view.ask_for_bet_amount(purse_amount)
     end
     @purse -= @bet
   end
@@ -20,7 +46,7 @@ class HumanPlayer < Player
     @purse
   end
 
-  def empty_purse?
+  def purse_empty?
     @purse <= 0
   end
 

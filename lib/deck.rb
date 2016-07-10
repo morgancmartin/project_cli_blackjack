@@ -1,7 +1,6 @@
-require 'deck_empty_error'
 class Deck
   def initialize
-    @cards = new_deck
+    @cards = new_deck.shuffle
   end
 
   def size
@@ -23,7 +22,7 @@ class Deck
   end
 
   def ranks
-    (1..10).to_a << :jack << :queen << :king
+    (2..10).to_a << :ace << :jack << :queen << :king
   end
 
   def shuffle
@@ -38,7 +37,11 @@ class Deck
     return_array = []
     ranks.each do |rank|
       suits.each do |suit|
-        return_array << Card.new(suit, rank)
+        if rank == :ace
+          return_array << Ace.new(suit, rank)
+        else
+          return_array << Card.new(suit, rank)
+        end
       end
     end
     return_array

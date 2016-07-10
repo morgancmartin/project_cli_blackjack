@@ -1,4 +1,5 @@
 class Hand
+  attr_reader :cards
   def initialize(cards = [])
     @cards = cards
   end
@@ -12,8 +13,12 @@ class Hand
     end
   end
 
+  def remove_card
+    @cards.pop
+  end
+
   def total_value
-    return 0 if @cards.nil?
+    return 0 if @cards.empty?
     @cards.map { |card| card.value }.reduce(:+)
   end
 
@@ -33,10 +38,19 @@ class Hand
     card.is_a?(Ace) ? add_ace(card) : @cards << card
   end
 
+  def blackjack?
+    num_of_cards == 2 && total_value == 21
+  end
+
   private
 
   def add_ace(ace)
-    @cards << total_value + 11 > 21 ? ace.toggle_value : ace
+    if total_value + 11 > 21
+      ace.toggle_value
+      @cards << ace
+    else
+      @cards << ace
+    end
   end
 
   def toggle_ace
