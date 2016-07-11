@@ -6,9 +6,33 @@ class HumanPlayer < Player
     @bet = 0
   end
 
+  def double_bet
+    @bet = 2 * @bet
+  end
+
+  def doubled_down
+    @doubled_down
+  end
+
+  def reset_doubled_down
+    @doubled_down = false
+  end
+
+  def possible_to_dd
+    @bet * 2 < @purse
+  end
+
   def hit?
-    result = @view.ask_for_hit
-    result == 'y' ? true : false
+    result = @view.ask_for_hit_or_dd(possible_to_dd)
+    case result
+    when 'y'
+      true
+    when 'n'
+      false
+    when 'dd'
+      @doubled_down = true
+      false
+    end
   end
 
   def handle_blackjack_bet
@@ -36,7 +60,7 @@ class HumanPlayer < Player
 
   def make_bet
     @bet = nil
-    until !@bet.nil? && @bet < @purse
+    until !@bet.nil? && @bet <= @purse
       @bet = @view.ask_for_bet_amount(purse_amount)
     end
     @purse -= @bet

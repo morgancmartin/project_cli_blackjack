@@ -6,6 +6,7 @@ class Game
     @deck = Deck.new
   end
 
+  # Could switch between players using a @current_player...
   def play
     @player.assign_name
     round_loop
@@ -38,10 +39,12 @@ class Game
     end
   end
 
+  # This could be moved to the humanplayer class
   def player_turn
     hit_loop(@player)
   end
 
+  # This could be moved to the dealer class...
   def dealer_turn
     @dealer.show_hidden_card
     render_cards(@dealer.cards_in_hand, "The Dealer shows his hidden card...")
@@ -51,12 +54,14 @@ class Game
   def reset_hands
     @deck.add_card(@player.remove_card_from_hand) until @player.cards_in_hand.empty?
     @deck.add_card(@dealer.remove_card_from_hand) until @dealer.cards_in_hand.empty?
+    @deck.shuffle!
   end
 
   def print_game_results
-    @view.print_game_results
+    @view.print_game_results(@player.purse_amount)
   end
 
+  # This could be moved to the gameview class
   def print_round_results
     @view.print_score_results(@player.hand_value, @dealer.hand_value)
     @view.print_blackjack if @player.blackjack? && player_wins_round?
@@ -84,20 +89,34 @@ class Game
     @dealer.hand_value > @player.hand_value ? @dealer : @player
   end
 
+  #This could be moved to the player class
   def hit_loop(competitor)
     until competitor.bust? || competitor.twenty_one?
       sleep 2
       competitor.hit? ? deal_player_cards(competitor, 1) : break
+      break if competitor.doubled_down?
       @view.print_busted if competitor.bust?
       @view.print_player_hand(competitor)
     end
+    handle_double_down(competitor) if competitor.doubled_down?
   end
 
+  def handle_double_down(competitor)
+    deal_player_cards(competitor, 1)
+    @view.print_player_hand(competitor)
+    sleep 2
+    @view.output("About to double bet")
+    competitor.double_bet
+    competitor.reset_doubled_down
+  end
+
+  # This could be moved to the main view class
   def render_cards(cards, message = nil)
     @view.output(message) if message
     @view.render_cards(cards)
   end
 
+  # Perhaps move to a deck view?
   def deal
     @view.print_dealing_message
     deal_player_cards(@player, 2)

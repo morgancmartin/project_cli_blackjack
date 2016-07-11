@@ -2,6 +2,11 @@ class Player
   attr_reader :name
   def initialize(options = {})
     @hand = Hand.new
+    @doubled_down = false
+  end
+
+  def doubled_down?
+    @doubled_down
   end
 
   def bust?

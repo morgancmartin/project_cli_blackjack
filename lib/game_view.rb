@@ -93,23 +93,23 @@ class GameView < View
     if card.face_down?
       face_down_card
     else
-      "##########\n" +
+      "----------\n" +
         "|#{card.rank_symbol}#{' ' * (7 - card.rank_symbol.length)}#{card.suit_symbol}|\n" +
         "|        |\n" +
         "|        |\n" +
         "|        |\n" +
         "|#{card.suit_symbol}#{' ' * (7 - card.rank_symbol.length)}#{card.rank_symbol}|\n" +
-        "##########"
+        "----------"
     end
   end
 
   def face_down_card
-    "##########\n" +
+    "----------\n" +
     "| **  ** |\n" +
     "| **  ** |\n" +
     "|        |\n" +
     "|\\      /|\n" +
     "| ****** |\n" +
-    "##########"
+    "----------"
   end
 end

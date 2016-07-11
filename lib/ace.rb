@@ -11,6 +11,10 @@ class Ace < Card
   end
 
   def untoggled?
-    @value == 11 
+    @value == 11
+  end
+
+  def convert_rank_to_value
+    @value
   end
 end

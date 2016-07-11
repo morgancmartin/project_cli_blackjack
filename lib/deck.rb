@@ -3,6 +3,10 @@ class Deck
     @cards = new_deck.shuffle
   end
 
+  def shuffle!
+    @cards.shuffle!
+  end
+
   def size
     @cards.size
   end
@@ -23,10 +27,6 @@ class Deck
 
   def ranks
     (2..10).to_a << :ace << :jack << :queen << :king
-  end
-
-  def shuffle
-    @cards.shuffle
   end
 
   def suits

@@ -33,9 +33,7 @@ class Card
   private
 
   def convert_rank_to_value
-    if @rank == :ace
-      @value
-    elsif @rank.is_a?(Symbol)
+    if @rank.is_a?(Symbol)
       return 10 if [:jack, :queen, :king].include?(@rank)
     else
       @rank
